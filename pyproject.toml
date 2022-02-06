@@ -24,6 +24,13 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
+formulae = "^0.2.0"
+numpy = "^1.16"
+pandas = "^1.0.0"
+scipy = "^1.5.4"
+tensorflow-probability = "^0.14.1"
+six = "^1.10.0"
+
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"
@@ -37,6 +44,13 @@ safety = "^1.10"
 pytest = "^7.0"
 pytest-cov = "^3.0"
 pytest-randomly = "^3.11"
+
+markdown = "^3.3.6"
+sphinx = "^4.4"
+sphinx-autodoc-typehints = "^1.16"
+doc8 = "^0.10"
+m2r2 = "^0.3"
+tomlkit = "^0.9"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
