@@ -23,13 +23,9 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-formulae = "^0.2.0"
-numpy = "^1.16"
-pandas = "^1.0.0"
-scipy = "^1.5.4"
+python = "^3.8"
 tensorflow-probability = "^0.14.1"
-six = "^1.10.0"
+formulae = "^0.2.0"
 
 
 [tool.poetry.dev-dependencies]
