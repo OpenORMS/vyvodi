@@ -24,9 +24,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-tensorflow-probability = "^0.14.1"
 formulae = "^0.2.0"
-
+tensorflow-probability = "^0.14.1"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"
