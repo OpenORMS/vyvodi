@@ -8,6 +8,7 @@ corresponding TensorFlow Layers.
 import tensorflow as tf
 import tensorflow_probability as tfp
 from formulae import model_description
+from formulae.environment import Environment
 
 
 class Layer(object):
@@ -41,7 +42,8 @@ class Layer(object):
             self.group_terms = self.model.group_terms
 
 
-class ResponseLayer(object):
+#  Might not be needed, but I'll leave it here for now.
+class ResponseLayer(object):  # noqa: WPS230
     """TODO: Docstring for __call__.
 
     Parameters:
@@ -55,16 +57,21 @@ class ResponseLayer(object):
             term: TODO
         """
         self.term = term
+        self.data = None
+        self.env = None
+        self.layer = None
         self.name = None
         self.kind = None  # either numeric or categorical
         self.baseline = None  # Not None for non-binary categorical
         self.success = None  # Not None if binary categorical
         self.levels = None  # Not None for categorical
         self.binary = None  # Not None for categorical (bool)
-    
-    def _evaluate(self):
-        """TODO: Docstring for _evaluate.
-        """
+
+    def _evaluate(self, data, env):
+        """TODO: Docstring for _evaluate."""
+        self.data = data
+        self.env = env
+        self.term.set_type(self.data, self.env)
         self.name = self.term.term.name
         self.kind = self.term.term.metadata['kind']
 
@@ -82,15 +89,26 @@ class CommonTermsLayer(object):
 
     Parameters:
         x: TODO
-
-    Attributes:
-        terms: TODO
     """
 
-    def __init__(self, terms):
+    def __init__(self, model):
         """TODO: Docstring for __init__.
 
         Parameters:
-            terms: TODO
+            model: TODO
         """
-        self.terms = terms
+        self.model = model
+        self.data = None
+        self.env = None
+        self.layer = None
+        self.terms_info = None
+        self.evaluated = False
+
+    def _evaluate(self, data, env):
+        """TODO: Docstring for _evaluate.
+
+        Parameters:
+            data: TODO
+            env: TODO
+        """
+        pass
