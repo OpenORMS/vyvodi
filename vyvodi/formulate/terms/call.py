@@ -1,13 +1,17 @@
-from formulae import terms as fterms
-from tensorflow.python.framework import dtypes as tf_dtypes
-from tensorflow.python.framework import ops
-from tensorflow.python.ops.check_ops import is_numeric_tensor
+from formulae.terms.call import Call as FormulaeCall
+from formulae.terms.call_utils import CallVarsExtractor
+from pandas import DataFrame
 
-from ..transforms import TRANSFORMS, Proportion, Offset
-from .call_utils import CallVarsExtractor
+from vyvodi.formulate.terms import type_checker
+from vyvodi.formulate.transforms import TRANSFORMS, Offset, Proportion
 
 
-class Call(fterms.Call):
+class Call(FormulaeCall):
+    """Representation of a call in a model Term.
+
+    This class and ``Variable`` ar the atomic components of a model term.
+    """
+
     @property
     def var_names(self):
         """Returns the names of the variables involved in the call.
@@ -22,7 +26,7 @@ class Call(fterms.Call):
         """
         return set(CallVarsExtractor(self).get())
 
-    def set_type(self, data_mask, env):
+    def set_type(self, data_mask, env):  # noqa: WPS615
         """Evaluates function and determines the type of the result.
 
         Parameters
@@ -37,45 +41,30 @@ class Call(fterms.Call):
         ValueError
             If the evaluated data is of an unknown type.
         """
-        self.env = env.with_outer_namespace(TRANSFORMS)
-        eval_data = self.call.eval(data_mask, self.env)
-
-        if is_numeric_tensor(eval_data):  # already checks if it's a tensor
-            self.type = 'numeric'
-
-        if isinstance(eval_data, ops.Tensor) and eval_data.dtype == tf_dtypes.string:
-            self.type = 'categoric'
-
-        if isinstance(eval_data, ops.Tensor) and eval_data.dtype == tf_dtypes.bool:
-            self.type = 'categoric'
-
-        if isinstance(eval_data, Proportion):
-            self.type = 'proportion'
-
-        if isinstance(eval_data, Offset):
-            self.type = 'offset'
+        if isinstance(data_mask, DataFrame):
+            super().set_type(data_mask, env)
 
         else:
-            raise ValueError(
-                'Call result is of unrecognized type: ({found}).'.format(
-                    found=str(type(eval_data)),
-                ),
-            )
+            self.env = env.with_outer_namespace(TRANSFORMS)
+            eval_data = self.call.eval(data_mask, self.env)
 
-        self._intermediate_data = eval_data
+            if type_checker.is_numeric(eval_data):
+                self.type = 'numeric'
 
-    def set_data(self, encoding=False):
-        """Finishes the evaluation of the call according to its type.
+            if type_checker.is_categoric(eval_data):
+                self.type = 'categoric'
 
-        Parameters
-        ----------
-        encoding : bool
-            Indicates if it uses full or reduced encoding when
-            the call is categoric.
+            if isinstance(eval_data, Proportion):
+                self.type = 'proportion'
 
-        Returns
-        -------
-        result : pd.DataFrame or dict of tf.Tensor
-            The result of the call.
-        """
-        pass  # TODO: implement
+            if isinstance(eval_data, Offset):
+                self.type = 'offset'
+
+            else:
+                raise ValueError(
+                    'Call result is of unrecognized type: ({found}).'.format(
+                        found=str(type(eval_data)),
+                    ),
+                )
+
+            self._intermediate_data = eval_data
