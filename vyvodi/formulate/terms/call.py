@@ -50,13 +50,13 @@ class Call(FormulaeCall):
 
             if type_checker.is_numeric_tensor(eval_data):
                 self.type = 'numeric'
-            elif type_checker.is_string_tensor(eval_data):
+            if type_checker.is_string_tensor(eval_data):
                 self.type = 'categoric'
-            elif type_checker.is_bool_tensor(eval_data):
+            if type_checker.is_bool_tensor(eval_data):
                 self.type = 'categoric'
-            elif isinstance(eval_data, Proportion):
+            if isinstance(eval_data, Proportion):
                 self.type = 'proportion'
-            elif isinstance(eval_data, Offset):
+            if isinstance(eval_data, Offset):
                 self.type = 'offset'
             else:
                 raise ValueError(
