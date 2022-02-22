@@ -31,7 +31,9 @@ class Variable(FormulaeVariable):
             self.kind = 'numeric'
             if self.level is not None:
                 raise ValueError('...')  # TODO: raise error
-        elif type_checker.is_categoric(eval_data):
+        elif type_checker.is_string_tensor(eval_data):
+            self.kind = 'categoric'
+        elif type_checker.is_bool_tensor(eval_data):
             self.kind = 'categoric'
         else:
             raise ValueError('...')  # TODO: raise error

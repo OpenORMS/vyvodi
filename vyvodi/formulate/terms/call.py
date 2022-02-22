@@ -48,18 +48,16 @@ class Call(FormulaeCall):
             self.env = env.with_outer_namespace(TRANSFORMS)
             eval_data = self.call.eval(data_mask, self.env)
 
-            if type_checker.is_numeric(eval_data):
+            if type_checker.is_numeric_tensor(eval_data):
                 self.type = 'numeric'
-
-            if type_checker.is_categoric(eval_data):
+            elif type_checker.is_string_tensor(eval_data):
                 self.type = 'categoric'
-
-            if isinstance(eval_data, Proportion):
+            elif type_checker.is_bool_tensor(eval_data):
+                self.type = 'categoric'
+            elif isinstance(eval_data, Proportion):
                 self.type = 'proportion'
-
-            if isinstance(eval_data, Offset):
+            elif isinstance(eval_data, Offset):
                 self.type = 'offset'
-
             else:
                 raise ValueError(
                     'Call result is of unrecognized type: ({found}).'.format(

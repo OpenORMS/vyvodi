@@ -1,8 +1,6 @@
 from tensorflow.python.framework import dtypes, ops
 from tensorflow.python.ops.check_ops import NUMERIC_TYPES
 
-CATEGORIC_TYPES = frozenset((dtypes.bool, dtypes.string))
-
 
 def is_numeric_tensor(tensor):
     """Checks if the tensor is numeric.
@@ -23,8 +21,8 @@ def is_numeric_tensor(tensor):
     return False
 
 
-def is_categoric_tensor(tensor):
-    """Checks if the tensor is categoric.
+def is_string_tensor(tensor):
+    """Checks if the tensor is a string.
 
     Parameters
     ----------
@@ -34,9 +32,28 @@ def is_categoric_tensor(tensor):
     Returns
     -------
     result : bool
-        True if the tensor is categoric, False otherwise.
+        True if the tensor is a string, False otherwise.
     """
     if isinstance(tensor, ops.Tensor):
-        return tensor.dtype in CATEGORIC_TYPES
+        return tensor.dtype == dtypes.string
+
+    return False
+
+
+def is_boolean_tensor(tensor):
+    """Checks if the tensor is boolean.
+
+    Parameters
+    ----------
+    tensor : tf.Tensor
+        Tensor to be checked.
+
+    Returns
+    -------
+    result : bool
+        True if the tensor is bool, False otherwise.
+    """
+    if isinstance(tensor, ops.Tensor):
+        return tensor.dtype == dtypes.bool
 
     return False
