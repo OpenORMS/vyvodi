@@ -29,12 +29,7 @@ class Variable(FormulaeVariable):
         eval_data = data_mask[self.name]
         if type_checker.is_numeric_tensor(eval_data):
             self.kind = 'numeric'
-            if self.level is not None:
-                raise ValueError('...')  # TODO: raise error
-        if type_checker.is_string_tensor(eval_data):
-            self.kind = 'categoric'
-
-        if type_checker.is_boolean_tensor(eval_data):
+        elif type_checker.is_string_tensor(eval_data):
             self.kind = 'categoric'
         else:
             raise ValueError('...')  # TODO: raise error

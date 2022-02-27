@@ -16,7 +16,7 @@ def is_numeric_tensor(tensor):
         True if the tensor is numeric, False otherwise.
     """
     if isinstance(tensor, ops.Tensor):
-        return tensor.dtype in NUMERIC_TYPES
+        return tensor.dtype in NUMERIC_TYPES + [dtypes.bool]
 
     return False
 
@@ -36,24 +36,5 @@ def is_string_tensor(tensor):
     """
     if isinstance(tensor, ops.Tensor):
         return tensor.dtype == dtypes.string
-
-    return False
-
-
-def is_boolean_tensor(tensor):
-    """Checks if the tensor is boolean.
-
-    Parameters
-    ----------
-    tensor : tf.Tensor
-        Tensor to be checked.
-
-    Returns
-    -------
-    result : bool
-        True if the tensor is bool, False otherwise.
-    """
-    if isinstance(tensor, ops.Tensor):
-        return tensor.dtype == dtypes.bool
 
     return False
