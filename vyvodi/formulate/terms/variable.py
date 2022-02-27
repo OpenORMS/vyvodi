@@ -27,14 +27,14 @@ class Variable(FormulaeVariable):
             or if the variable is numeric and has a level.
         """
         eval_data = data_mask[self.name]
-        if type_checker.is_numeric(eval_data):
+        if type_checker.is_numeric_tensor(eval_data):
             self.kind = 'numeric'
             if self.level is not None:
                 raise ValueError('...')  # TODO: raise error
         if type_checker.is_string_tensor(eval_data):
             self.kind = 'categoric'
 
-        if type_checker.is_bool_tensor(eval_data):
+        if type_checker.is_boolean_tensor(eval_data):
             self.kind = 'categoric'
         else:
             raise ValueError('...')  # TODO: raise error
@@ -53,27 +53,3 @@ class Variable(FormulaeVariable):
             # TODO: make the dtype more explicit.
 
         return {'value': value, 'type': kind}
-
-    def _eval_categoric(self, x, encoding):
-        if x.dtype == tf.bool:
-            x = tf.cast(x, tf.float32)
-            value, _ = self._eval_numeric(x).values()
-            levels = None
-            reference = False
-        elif x.dtype == tf.string:
-            levels, value = tf.unique(x)
-            reference = levels[-1]
-            if encoding:
-                value = tf.one_hot(value, levels.shape[0])
-                encoding = 'full'
-            else:
-                value = tf.one_hot(value, levels.shape[0] - 1)
-                encoding = 'reduced'
-
-        return {
-            'value': value,
-            'type': 'categoric',
-            'levels': levels,
-            'reference': reference,
-            'encoding': encoding,
-        }
